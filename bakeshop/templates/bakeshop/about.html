@@ -1,0 +1,611 @@
+{% extends 'bakeshop/base.html' %}
+{% load bakeshop_tags %}
+{% load static %}
+
+{% block title %}About Us - {{ site_settings.site_name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .about-hero {
+        padding: 150px 0;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        color: #fff;
+        text-align: center;
+    }
+    
+    .about-hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+    }
+    
+    .about-hero-content {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .about-hero h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 48px;
+        margin-bottom: 20px;
+    }
+    
+    .about-hero p {
+        font-size: 20px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .about-section {
+        padding: 80px 0;
+    }
+    
+    .section-title {
+        text-align: center;
+        margin-bottom: 60px;
+    }
+    
+    .section-title h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 36px;
+        position: relative;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .section-title h2:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 3px;
+        background: #8c5e17;
+    }
+    
+    .section-title p {
+        font-size: 18px;
+        color: #666;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+    
+    .story-content {
+        padding: 30px;
+    }
+    
+    .story-image {
+        overflow: hidden;
+        border-radius: 10px;
+    }
+    
+    .story-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+    
+    .story-image:hover img {
+        transform: scale(1.05);
+    }
+    
+    .values-section {
+        background-color: #f9f5f0;
+    }
+    
+    .value-card {
+        text-align: center;
+        padding: 40px 30px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        margin-bottom: 30px;
+        transition: transform 0.3s ease;
+    }
+    
+    .value-card:hover {
+        transform: translateY(-10px);
+    }
+    
+    .value-icon {
+        width: 80px;
+        height: 80px;
+        background-color: #f1e8d8;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+    }
+    
+    .value-icon i {
+        font-size: 36px;
+        color: #8c5e17;
+    }
+    
+    .value-card h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 24px;
+        margin-bottom: 15px;
+    }
+    
+    .value-card p {
+        color: #666;
+    }
+    
+    .team-member {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .team-image {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin: 0 auto 20px;
+        border: 5px solid #f1e8d8;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .team-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .team-member h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 24px;
+        margin-bottom: 5px;
+    }
+    
+    .team-member p.position {
+        color: #8c5e17;
+        font-style: italic;
+        margin-bottom: 15px;
+    }
+    
+    .team-member p.bio {
+        color: #666;
+    }
+    
+    .timeline-section {
+        background-color: #f9f5f0;
+        position: relative;
+    }
+    
+    .timeline {
+        position: relative;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px 0;
+    }
+    
+    .timeline:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        width: 4px;
+        background: #8c5e17;
+        transform: translateX(-50%);
+    }
+    
+    .timeline-item {
+        padding: 30px 0;
+        position: relative;
+    }
+    
+    .timeline-content {
+        position: relative;
+        width: 45%;
+        padding: 20px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .timeline-item:nth-child(odd) .timeline-content {
+        margin-left: auto;
+    }
+    
+    .timeline-content:before {
+        content: '';
+        position: absolute;
+        top: 20px;
+        width: 20px;
+        height: 20px;
+    }
+    
+    .timeline-item:nth-child(odd) .timeline-content:before {
+        left: -10px;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-right: 10px solid #fff;
+    }
+    
+    .timeline-item:nth-child(even) .timeline-content:before {
+        right: -10px;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-left: 10px solid #fff;
+    }
+    
+    .timeline-dot {
+        position: absolute;
+        top: 30px;
+        left: 50%;
+        width: 30px;
+        height: 30px;
+        background: #8c5e17;
+        border-radius: 50%;
+        transform: translateX(-50%);
+        border: 5px solid #f9f5f0;
+        z-index: 1;
+    }
+    
+    .timeline-year {
+        position: absolute;
+        top: 30px;
+        font-size: 20px;
+        font-weight: 700;
+        color: #8c5e17;
+    }
+    
+    .timeline-item:nth-child(odd) .timeline-year {
+        right: 55%;
+        margin-right: 20px;
+        text-align: right;
+    }
+    
+    .timeline-item:nth-child(even) .timeline-year {
+        left: 55%;
+        margin-left: 20px;
+    }
+    
+    .timeline-content h3 {
+        font-family: 'Playfair Display', serif;
+        margin-bottom: 10px;
+    }
+    
+    .timeline-content p {
+        color: #666;
+    }
+    
+    .awards-section {
+        position: relative;
+    }
+    
+    .award-card {
+        text-align: center;
+        padding: 30px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        margin-bottom: 30px;
+        transition: transform 0.3s ease;
+    }
+    
+    .award-card:hover {
+        transform: translateY(-10px);
+    }
+    
+    .award-icon {
+        font-size: 40px;
+        color: #8c5e17;
+        margin-bottom: 20px;
+    }
+    
+    .award-year {
+        font-size: 18px;
+        color: #8c5e17;
+        margin-bottom: 10px;
+    }
+    
+    .award-card h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 22px;
+        margin-bottom: 10px;
+    }
+    
+    .award-card p {
+        color: #666;
+    }
+    
+    @media (max-width: 768px) {
+        .timeline:before {
+            left: 30px;
+        }
+        
+        .timeline-content {
+            width: calc(100% - 80px);
+            margin-left: 80px !important;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content:before,
+        .timeline-item:nth-child(even) .timeline-content:before {
+            left: -10px;
+            right: auto;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-right: 10px solid #fff;
+            border-left: none;
+        }
+        
+        .timeline-dot {
+            left: 30px;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-year,
+        .timeline-item:nth-child(even) .timeline-year {
+            left: 0;
+            right: auto;
+            text-align: left;
+            margin-left: 0;
+            margin-right: 0;
+            top: 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="about-hero" style="background-image: url('{% static 'images/about-bg.jpg' %}');">
+    <div class="about-hero-overlay"></div>
+    <div class="container">
+        <div class="about-hero-content">
+            <h1>Our Story</h1>
+            <p>Discover the passion behind ELJIN SUPERBAKESHOP and our commitment to quality baking since 1998</p>
+        </div>
+    </div>
+</section>
+
+<!-- Our Story Section -->
+{% if sections.story %}
+<section class="about-section">
+    <div class="container">
+        <div class="section-title">
+            <h2>{{ sections.story.title }}</h2>
+        </div>
+        
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="story-image">
+                    {% if sections.story.image %}
+                        <img src="{{ sections.story.image.url }}" alt="Our Story">
+                    {% else %}
+                        <img src="{% static 'images/story.jpg' %}" alt="Our Story">
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="story-content">
+                    {{ sections.story.content|safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Core Values Section -->
+{% if sections.values %}
+<section class="about-section values-section">
+    <div class="container">
+        <div class="section-title">
+            <h2>{{ sections.values.title }}</h2>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3>Passion</h3>
+                    <p>We pour our hearts into every creation, ensuring each pastry is crafted with love and dedication.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>Quality</h3>
+                    <p>We use only premium ingredients and maintain high standards to deliver exceptional products.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3>Innovation</h3>
+                    <p>We continuously explore new recipes and techniques to bring creative and delicious offerings to our customers.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="values-content">
+                    {{ sections.values.content|safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Mission & Vision Section -->
+{% if sections.mission %}
+<section class="about-section">
+    <div class="container">
+        <div class="section-title">
+            <h2>{{ sections.mission.title }}</h2>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="mission-content">
+                    {{ sections.mission.content|safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Team Section -->
+<section class="about-section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Meet Our Team</h2>
+            <p>The talented people behind our delicious creations</p>
+        </div>
+        
+        <div class="row">
+            {% for member in team_members %}
+            <div class="col-md-4">
+                <div class="team-member">
+                    <div class="team-image">
+                        <img src="{{ member.image.url }}" alt="{{ member.name }}">
+                    </div>
+                    <h3>{{ member.name }}</h3>
+                    <p class="position">{{ member.position }}</p>
+                    <p class="bio">{{ member.bio|truncate_chars:150 }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Awards Section -->
+{% if awards %}
+<section class="about-section awards-section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Our Achievements</h2>
+            <p>Recognition of our commitment to excellence</p>
+        </div>
+        
+        <div class="row">
+            {% for award in awards %}
+            <div class="col-md-4">
+                <div class="award-card">
+                    <div class="award-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="award-year">{{ award.year }}</div>
+                    <h3>{{ award.title }}</h3>
+                    <p>{{ award.organization }}</p>
+                    {% if award.description %}
+                    <p>{{ award.description|truncate_chars:100 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Quality Commitment Section -->
+{% if sections.quality %}
+<section class="about-section values-section">
+    <div class="container">
+        <div class="section-title">
+            <h2>{{ sections.quality.title }}</h2>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-6 mx-auto">
+                <div class="quality-content">
+                    {{ sections.quality.content|safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Timeline Section -->
+{% if timeline_events %}
+<section class="about-section timeline-section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Our Journey</h2>
+            <p>The milestones that shaped our bakery through the years</p>
+        </div>
+        
+        <div class="timeline">
+            {% for event in timeline_events %}
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-year">{{ event.year }}</div>
+                <div class="timeline-content">
+                    <h3>{{ event.title }}</h3>
+                    <p>{{ event.description }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Gallery Section -->
+{% if gallery_images %}
+<section class="about-section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Photo Gallery</h2>
+            <p>A glimpse into our bakery world</p>
+        </div>
+        
+        <div class="row">
+            {% for image in gallery_images %}
+            <div class="col-md-4 mb-4">
+                <div class="gallery-item">
+                    <img src="{{ image.image.url }}" alt="{{ image.title }}" class="img-fluid rounded">
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Smooth scrolling
+        const scrollLinks = document.querySelectorAll('.smooth-scroll');
+        for (const link of scrollLinks) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

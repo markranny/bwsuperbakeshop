@@ -1,0 +1,447 @@
+{% extends 'bakeshop/base.html' %}
+{% load bakeshop_tags %}
+
+{% block title %}Menu - {{ site_settings.site_name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .menu-container {
+        padding: 80px 0;
+    }
+    
+    .menu-header {
+        text-align: center;
+        margin-bottom: 60px;
+    }
+    
+    .menu-header h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 48px;
+        margin-bottom: 20px;
+    }
+    
+    .menu-header p {
+        font-size: 18px;
+        max-width: 700px;
+        margin: 0 auto;
+        color: #666;
+    }
+    
+    .category-sidebar {
+        background-color: #f9f5f0;
+        padding: 30px;
+        border-radius: 10px;
+        position: sticky;
+        top: 100px;
+    }
+    
+    .category-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .category-list li {
+        margin-bottom: 10px;
+    }
+    
+    .category-link {
+        display: flex;
+        align-items: center;
+        padding: 10px 15px;
+        border-radius: 5px;
+        color: #333;
+        transition: all 0.3s ease;
+    }
+    
+    .category-link:hover,
+    .category-link.active {
+        background-color: #f1e8d8;
+        color: #8c5e17;
+        text-decoration: none;
+    }
+    
+    .category-icon {
+        width: 30px;
+        height: 30px;
+        margin-right: 10px;
+        border-radius: 50%;
+        overflow: hidden;
+    }
+    
+    .category-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .menu-filters {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        margin-bottom: 30px;
+    }
+    
+    .filter-title {
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+    
+    .form-check {
+        margin-bottom: 10px;
+    }
+    
+    .menu-item {
+        background-color: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        margin-bottom: 30px;
+        transition: transform 0.3s ease;
+    }
+    
+    .menu-item:hover {
+        transform: translateY(-5px);
+    }
+    
+    .menu-item-image {
+        height: 220px;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .menu-item-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+    
+    .menu-item:hover .menu-item-image img {
+        transform: scale(1.05);
+    }
+    
+    .item-badges {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    
+    .menu-item-content {
+        padding: 20px;
+    }
+    
+    .menu-item-content h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+    
+    .item-price {
+        font-size: 20px;
+        font-weight: 600;
+        color: #8c5e17;
+        margin-bottom: 15px;
+    }
+    
+    .item-description {
+        color: #666;
+        margin-bottom: 20px;
+    }
+    
+    .featured-section {
+        padding: 80px 0;
+        background-color: #f9f5f0;
+    }
+    
+    .featured-title {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+    
+    .featured-title h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 36px;
+        margin-bottom: 15px;
+    }
+    
+    .featured-title p {
+        font-size: 18px;
+        max-width: 600px;
+        margin: 0 auto;
+        color: #666;
+    }
+    
+    .offers-section {
+        padding: 80px 0;
+    }
+    
+    .offer-card {
+        background-color: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        display: flex;
+        margin-bottom: 30px;
+    }
+    
+    .offer-image {
+        width: 40%;
+    }
+    
+    .offer-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .offer-content {
+        width: 60%;
+        padding: 30px;
+    }
+    
+    .offer-content h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 28px;
+        margin-bottom: 15px;
+    }
+    
+    .offer-discount {
+        font-size: 24px;
+        font-weight: 700;
+        color: #e63946;
+        margin-bottom: 20px;
+    }
+    
+    .offer-description {
+        color: #666;
+        margin-bottom: 20px;
+    }
+    
+    .offer-expiry {
+        font-size: 14px;
+        color: #888;
+    }
+    
+    @media (max-width: 768px) {
+        .category-sidebar {
+            position: relative;
+            top: 0;
+            margin-bottom: 30px;
+        }
+        
+        .offer-card {
+            flex-direction: column;
+        }
+        
+        .offer-image,
+        .offer-content {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Menu Header -->
+<section class="hero-section" style="background-image: url('{% static 'images/menu-bg.jpg' %}');">
+    <div class="hero-overlay"></div>
+    <div class="container">
+        <div class="hero-content text-center">
+            <h1>Our Menu</h1>
+            <p>Discover the delicious delights from our bakery</p>
+        </div>
+    </div>
+</section>
+
+<!-- Menu Content -->
+<section class="menu-container">
+    <div class="container">
+        <div class="row">
+            <!-- Categories Sidebar -->
+            <div class="col-lg-3">
+                <div class="category-sidebar">
+                    <h4>Categories</h4>
+                    <ul class="category-list">
+                        <li>
+                            <a href="{% url 'bakeshop:menu' %}" class="category-link {% if not current_category %}active{% endif %}">
+                                <span>All Items</span>
+                            </a>
+                        </li>
+                        {% for category in categories %}
+                        <li>
+                            <a href="{% url 'bakeshop:menu_category' category.slug %}" class="category-link {% if current_category == category %}active{% endif %}">
+                                {% if category.image %}
+                                <div class="category-icon">
+                                    <img src="{{ category.image.url }}" alt="{{ category.name }}">
+                                </div>
+                                {% endif %}
+                                <span>{{ category.name }}</span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    
+                    <!-- Filters -->
+                    <div class="menu-filters mt-4">
+                        <h5 class="filter-title">Dietary Filters</h5>
+                        <form method="get" action="{% if current_category %}{% url 'bakeshop:menu_category' current_category.slug %}{% else %}{% url 'bakeshop:menu' %}{% endif %}">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="vegetarian" id="vegetarian" {% if filters.vegetarian %}checked{% endif %}>
+                                <label class="form-check-label" for="vegetarian">
+                                    Vegetarian
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="gluten_free" id="gluten_free" {% if filters.gluten_free %}checked{% endif %}>
+                                <label class="form-check-label" for="gluten_free">
+                                    Gluten-Free
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="sugar_free" id="sugar_free" {% if filters.sugar_free %}checked{% endif %}>
+                                <label class="form-check-label" for="sugar_free">
+                                    Sugar-Free
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="new" id="new" {% if filters.new %}checked{% endif %}>
+                                <label class="form-check-label" for="new">
+                                    New Items
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-3 w-100">Apply Filters</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Menu Items -->
+            <div class="col-lg-9">
+                <div class="row">
+                    {% if current_category %}
+                    <div class="col-12 mb-4">
+                        <div class="category-header">
+                            <h2>{{ current_category.name }}</h2>
+                            <p>{{ current_category.description }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% for item in menu_items %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="menu-item">
+                            <div class="menu-item-image">
+                                <img src="{{ item.image.url }}" alt="{{ item.name }}">
+                                <div class="item-badges">
+                                    {{ item|menu_item_badges }}
+                                </div>
+                            </div>
+                            <div class="menu-item-content">
+                                <h3>{{ item.name }}</h3>
+                                <div class="item-price">{{ item.price|currency }}</div>
+                                <p class="item-description">{{ item.description|truncate_chars:100 }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-12">
+                        <div class="text-center py-5">
+                            <h3>No items found</h3>
+                            <p>Please try a different category or remove some filters.</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if special_offers and not current_category %}
+<!-- Special Offers -->
+<section class="offers-section" style="background-color: #f9f5f0;">
+    <div class="container">
+        <div class="featured-title">
+            <h2>Special Offers</h2>
+            <p>Limited time deals you won't want to miss</p>
+        </div>
+        
+        <div class="row">
+            {% for offer in special_offers %}
+            <div class="col-md-12">
+                <div class="offer-card">
+                    <div class="offer-image">
+                        <img src="{{ offer.image.url }}" alt="{{ offer.title }}">
+                    </div>
+                    <div class="offer-content">
+                        <h3>{{ offer.title }}</h3>
+                        {% if offer.discount_percentage %}
+                        <div class="offer-discount">{{ offer.discount_percentage }}% OFF</div>
+                        {% endif %}
+                        <p class="offer-description">{{ offer.description }}</p>
+                        <p class="offer-expiry">Offer valid until: {{ offer.expiry_date }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if featured_items and not current_category %}
+<!-- Featured Items -->
+<section class="featured-section">
+    <div class="container">
+        <div class="featured-title">
+            <h2>Customer Favorites</h2>
+            <p>Our most loved creations that keep customers coming back</p>
+        </div>
+        
+        <div class="row">
+            {% for item in featured_items %}
+            <div class="col-md-4">
+                <div class="menu-item">
+                    <div class="menu-item-image">
+                        <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                    </div>
+                    <div class="menu-item-content">
+                        <h3>{{ item.title }}</h3>
+                        <div class="item-price">{{ item.price|currency }}</div>
+                        <p class="item-description">{{ item.description|truncate_chars:100 }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Smooth scrolling
+        const scrollLinks = document.querySelectorAll('.smooth-scroll');
+        for (const link of scrollLinks) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}
