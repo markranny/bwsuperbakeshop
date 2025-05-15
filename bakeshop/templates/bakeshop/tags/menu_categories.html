@@ -1,0 +1,19 @@
+<div class="menu-categories">
+    <h4>Categories</h4>
+    <ul class="category-list">
+        {% for category in categories %}
+        <li>
+            <a href="{% url 'bakeshop:menu_category' category.slug %}" class="category-link{% if category.slug == current_category.slug %} active{% endif %}">
+                {% if category.image %}
+                <div class="category-icon">
+                    <img src="{{ category.image.url }}" alt="{{ category.name }}">
+                </div>
+                {% endif %}
+                <span>{{ category.name }}</span>
+            </a>
+        </li>
+        {% empty %}
+        <li>No categories available</li>
+        {% endfor %}
+    </ul>
+</div>

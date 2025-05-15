@@ -1,0 +1,13 @@
+<div class="star-rating">
+    {% for i in whole_stars %}
+    <i class="fas fa-star"></i>
+    {% endfor %}
+    
+    {% if half_star %}
+    <i class="fas fa-star-half-alt"></i>
+    {% endif %}
+    
+    {% for i in empty_stars %}
+    <i class="far fa-star"></i>
+    {% endfor %}
+</div>

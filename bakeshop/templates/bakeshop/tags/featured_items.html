@@ -1,0 +1,27 @@
+<div class="featured-items">
+    <div class="row">
+        {% for item in items %}
+        <div class="col-md-4">
+            <div class="featured-item-card">
+                {% if item.image %}
+                <div class="featured-item-image">
+                    <img src="{{ item.image.url }}" alt="{{ item.name }}">
+                    <div class="item-badges">
+                        {{ item|menu_item_badges }}
+                    </div>
+                </div>
+                {% endif %}
+                <div class="featured-item-content">
+                    <h4>{{ item.name }}</h4>
+                    <div class="item-price">{{ item.price|currency }}</div>
+                    <p>{{ item.description|truncate_chars:80 }}</p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p>No featured items available</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>

@@ -1,4 +1,23 @@
-
+Django and core dependencies
+Django==4.2.7
+mysqlclient==2.2.0
+Pillow==10.0.1
+Rich text editor
+django-ckeditor==6.7.0
+django-js-asset==2.1.0  # Dependency for django-ckeditor
+Image processing
+sorl-thumbnail==12.10.0
+For handling form and image uploads
+python-magic==0.4.27
+django-cleanup==8.0.0
+Security enhancements
+django-cors-headers==4.3.0
+For development and testing
+django-debug-toolbar==4.2.0
+coverage==7.3.2
+Production dependencies
+gunicorn==21.2.0
+python-dotenv==1.0.0
 
 
 
